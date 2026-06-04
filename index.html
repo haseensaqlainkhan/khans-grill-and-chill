@@ -190,6 +190,74 @@
   </div>
 </nav>
 
+ /* Animated Flame Logo */
+.logo-a {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-a-flames {
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  height:22px;
+}
+
+.logo-a-flame {
+  width:5px;
+  border-radius:50% 50% 30% 30%;
+  animation:logoFlicker 1.5s ease-in-out infinite;
+  transform-origin:bottom center;
+}
+
+.logo-a-flame:nth-child(1){
+  height:10px;
+  background:var(--dim);
+  animation-delay:.1s;
+}
+
+.logo-a-flame:nth-child(2){
+  height:16px;
+  background:var(--ember);
+  animation-delay:.35s;
+}
+
+.logo-a-flame:nth-child(3){
+  height:22px;
+  background:var(--flame);
+}
+
+.logo-a-flame:nth-child(4){
+  height:18px;
+  background:var(--ember);
+  animation-delay:.5s;
+}
+
+.logo-a-flame:nth-child(5){
+  height:13px;
+  background:var(--dim);
+  animation-delay:.2s;
+}
+
+.logo-a-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;
+  color:var(--cream);
+  letter-spacing:.05em;
+}
+
+.logo-a-text .amp{
+  color:var(--ember);
+  font-style:italic;
+}
+
+@keyframes logoFlicker{
+  0%,100%{transform:scaleY(1) scaleX(1);}
+  33%{transform:scaleY(1.12) scaleX(.9);}
+  66%{transform:scaleY(.9) scaleX(1.08);}
+}
+ 
 <!-- HERO -->
 <section class="hero">
   <p class="hero-tag">The Khan Family invites you</p>
