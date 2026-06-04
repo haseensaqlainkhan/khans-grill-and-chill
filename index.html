@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
     --bg: #0a0704;
     --bg2: #110e09;
@@ -20,531 +19,200 @@
     --dark: #2e1a0a;
     --border: #2a1808;
   }
-
   html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--cream); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; }
 
-  body {
-    background: var(--bg);
-    color: var(--cream);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* STARS CANVAS */
-  #stars-canvas {
+  /* GLOW CURSOR */
+  #glow-cursor {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
     pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
+    z-index: 9999;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(239,159,39,0.12) 0%, rgba(192,72,40,0.07) 40%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: left 0.08s ease, top 0.08s ease;
+    mix-blend-mode: screen;
   }
 
-  /* SECTIONS */
-  section { position: relative; z-index: 1; }
+  /* STARS */
+  #stars-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.6; }
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 24px;
-    border-bottom: 1px solid var(--border);
+  /* FLOATING ICONS */
+  .floating-icons { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; overflow:hidden; }
+  .float-icon { position:absolute; font-size:28px; opacity:0; animation:floatUp linear infinite; filter:drop-shadow(0 0 6px rgba(192,72,40,0.4)); }
+  @keyframes floatUp { 0% { opacity:0; transform:translateY(0) rotate(0deg) scale(0.8); } 10% { opacity:0.25; } 80% { opacity:0.15; } 100% { opacity:0; transform:translateY(-100vh) rotate(20deg) scale(1.1); } }
+
+  section { position:relative; z-index:2; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 40px; background:linear-gradient(to bottom, rgba(10,7,4,0.95), transparent); }
+
+  /* ── LOGO OPTIONS ── */
+  /* Option A: Flame bar stack */
+  .logo-a { display:flex; align-items:center; gap:10px; }
+  .logo-a-flames { display:flex; align-items:flex-end; gap:2px; height:22px; }
+  .logo-a-flame { width:5px; border-radius:50% 50% 30% 30%; animation:logoFlicker 1.5s ease-in-out infinite; transform-origin:bottom center; }
+  .logo-a-flame:nth-child(1) { height:10px; background:var(--dim); animation-delay:0.1s; }
+  .logo-a-flame:nth-child(2) { height:16px; background:var(--ember); animation-delay:0.35s; }
+  .logo-a-flame:nth-child(3) { height:22px; background:var(--flame); animation-delay:0s; }
+  .logo-a-flame:nth-child(4) { height:18px; background:var(--ember); animation-delay:0.5s; }
+  .logo-a-flame:nth-child(5) { height:13px; background:var(--dim); animation-delay:0.2s; }
+  .logo-a-text { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--cream); letter-spacing:0.05em; }
+  .logo-a-text .amp { color:var(--ember); font-style:italic; }
+  @keyframes logoFlicker { 0%,100% { transform:scaleY(1) scaleX(1); } 33% { transform:scaleY(1.12) scaleX(0.9); } 66% { transform:scaleY(0.9) scaleX(1.08); } }
+
+  /* Option B: Glowing circle ember */
+  .logo-b { display:flex; align-items:center; gap:10px; }
+  .logo-b-icon { width:28px; height:28px; border-radius:50%; background:radial-gradient(circle at 40% 40%, var(--flame), var(--ember)); animation:pulseBraise 2s ease-in-out infinite; box-shadow: 0 0 12px rgba(239,159,39,0.5); display:flex; align-items:center; justify-content:center; font-size:13px; }
+  @keyframes pulseBraise { 0%,100% { box-shadow:0 0 10px rgba(239,159,39,0.4); transform:scale(1); } 50% { box-shadow:0 0 22px rgba(239,159,39,0.7); transform:scale(1.06); } }
+  .logo-b-text { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--cream); letter-spacing:0.05em; }
+  .logo-b-text .amp { color:var(--ember); font-style:italic; }
+
+  /* Option C: Monogram + underline ember */
+  .logo-c { display:flex; align-items:center; gap:10px; }
+  .logo-c-mono { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; color:var(--flame); letter-spacing:-0.02em; position:relative; line-height:1; }
+  .logo-c-mono::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:2px; background:linear-gradient(to right, var(--flame), transparent); animation:underlineGlow 2s ease-in-out infinite; }
+  @keyframes underlineGlow { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+  .logo-c-text { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--cream); letter-spacing:0.05em; }
+  .logo-c-text .amp { color:var(--ember); font-style:italic; }
+
+  .nav-links { display:flex; gap:28px; }
+  .nav-links a { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--dim); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cream); }
+
+  /* HERO */
+  .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:60px 24px; border-bottom:1px solid var(--border); }
+  .hero-tag { font-size:10px; letter-spacing:0.28em; text-transform:uppercase; color:var(--dim); margin-bottom:28px; opacity:0; animation:fadeUp 1s ease 0.3s forwards; }
+  .hero-flames { display:flex; align-items:flex-end; justify-content:center; gap:6px; margin-bottom:32px; opacity:0; animation:fadeUp 1s ease 0.5s forwards; }
+  .flame-shape { border-radius:50% 50% 30% 30%; animation:flicker 1.8s ease-in-out infinite; transform-origin:bottom center; }
+  .flame-shape:nth-child(1) { width:8px; height:18px; background:var(--dim); animation-delay:0.1s; }
+  .flame-shape:nth-child(2) { width:10px; height:26px; background:var(--ember); animation-delay:0.4s; }
+  .flame-shape:nth-child(3) { width:14px; height:38px; background:var(--flame); animation-delay:0s; }
+  .flame-shape:nth-child(4) { width:10px; height:30px; background:var(--ember); animation-delay:0.6s; }
+  .flame-shape:nth-child(5) { width:12px; height:46px; background:var(--flame); animation-delay:0.2s; }
+  .flame-shape:nth-child(6) { width:10px; height:28px; background:var(--ember); animation-delay:0.5s; }
+  .flame-shape:nth-child(7) { width:14px; height:36px; background:var(--flame); animation-delay:0.3s; }
+  .flame-shape:nth-child(8) { width:10px; height:24px; background:var(--ember); animation-delay:0.7s; }
+  .flame-shape:nth-child(9) { width:8px; height:16px; background:var(--dim); animation-delay:0.1s; }
+  @keyframes flicker { 0%,100% { transform:scaleY(1) scaleX(1); } 33% { transform:scaleY(1.1) scaleX(0.93); } 66% { transform:scaleY(0.92) scaleX(1.06); } }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(52px,10vw,96px); font-weight:300; line-height:0.95; color:var(--cream); margin-bottom:8px; opacity:0; animation:fadeUp 1.2s ease 0.7s forwards; }
+  .hero-title .amp { color:var(--ember); font-style:italic; }
+  .hero-subtitle { font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--dim); margin-bottom:32px; opacity:0; animation:fadeUp 1s ease 0.9s forwards; }
+  .hero-divider { display:flex; align-items:center; gap:16px; width:min(380px,90%); margin-bottom:32px; opacity:0; animation:fadeUp 1s ease 1s forwards; }
+  .hero-divider-line { flex:1; height:1px; background:var(--border); }
+  .hero-divider-dot { width:4px; height:4px; border-radius:50%; background:var(--ember); }
+  .hero-slogan { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--muted); margin-bottom:48px; opacity:0; animation:fadeUp 1s ease 1.1s forwards; }
+  .hero-details { display:flex; gap:0; opacity:0; animation:fadeUp 1s ease 1.3s forwards; }
+  .hero-detail { padding:0 28px; border-right:1px solid var(--border); text-align:center; }
+  .hero-detail:last-child { border-right:none; }
+  .hd-label { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--dim); margin-bottom:6px; }
+  .hd-value { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--cream); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  /* SECTION */
+  .section-inner { max-width:960px; margin:0 auto; padding:100px 24px; }
+  .section-label { font-size:9px; letter-spacing:0.28em; text-transform:uppercase; color:var(--ember); margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .section-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,6vw,56px); font-weight:300; color:var(--cream); line-height:1; margin-bottom:48px; }
+
+  /* MENU */
+  #menu { border-bottom:1px solid var(--border); }
+  .menu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:1px; }
+  .menu-grid-row2 { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-top:none; }
+  .menu-col { background:var(--bg2); padding:32px 28px; transition:background 0.3s; }
+  .menu-col:hover { background:var(--bg3); }
+  .menu-col-head { display:flex; align-items:center; gap:10px; margin-bottom:22px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .menu-col-icon { width:32px; height:32px; border:1px solid var(--ember); display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .menu-col-title { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+  .menu-item { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border); font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--cream); transition:color 0.2s, padding-left 0.2s; }
+  .menu-item:last-child { border-bottom:none; }
+  .menu-item:hover { color:var(--flame); padding-left:6px; }
+  .menu-item-dot { width:4px; height:4px; border-radius:50%; background:var(--ember); opacity:0.4; flex-shrink:0; }
+  .halal-badge { display:inline-flex; align-items:center; gap:6px; margin-top:24px; font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ember); border:1px solid var(--border); padding:8px 16px; }
+
+  /* VIBES */
+  #vibes { border-bottom:1px solid var(--border); }
+  .vibes-intro { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,52px); font-weight:300; color:var(--cream); line-height:1.05; margin-bottom:16px; }
+  .vibes-sub { font-size:13px; color:var(--dim); margin-bottom:56px; max-width:560px; }
+  .mood-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .mood-card { background:var(--bg2); border:1px solid var(--border); padding:28px 22px; cursor:default; transition:border-color 0.3s, box-shadow 0.3s; transform-style:preserve-3d; will-change:transform; }
+  .mood-card:hover { border-color:var(--ember); box-shadow:0 0 28px rgba(192,72,40,0.15); }
+  .mood-icon { font-size:28px; margin-bottom:14px; display:block; filter:drop-shadow(0 0 8px rgba(239,159,39,0.3)); }
+  .mood-title { font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--cream); margin-bottom:8px; }
+  .mood-desc { font-size:12px; color:var(--dim); line-height:1.6; }
+
+  /* QUOTE SECTION */
+  #quote { border-top:1px solid var(--border); }
+  .quote-inner { max-width:700px; margin:0 auto; padding:80px 24px; text-align:center; }
+  .big-quote { font-family:'Cormorant Garamond',serif; font-size:clamp(28px,5vw,48px); font-style:italic; color:var(--muted); line-height:1.2; margin-bottom:16px; }
+  .big-quote strong { color:var(--cream); font-style:normal; font-weight:400; }
+  .quote-meta { font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:var(--dim); }
+
+  /* FOOTER */
+  footer { padding:40px 24px; text-align:center; border-top:1px solid var(--border); }
+  .footer-brand { font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--dim); margin-bottom:8px; }
+  .footer-brand span { color:var(--ember); font-style:italic; }
+  .footer-note { font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--dark); }
+
+  @media (max-width:768px) {
+    nav { padding:16px 20px; }
+    .nav-links { display:none; }
+    .hero-details { flex-direction:column; gap:20px; }
+    .hero-detail { border-right:none; border-bottom:1px solid var(--border); padding:0 0 20px; }
+    .hero-detail:last-child { border-bottom:none; }
+    .menu-grid, .menu-grid-row2 { grid-template-columns:1fr; }
+    .mood-grid { grid-template-columns:1fr 1fr; }
   }
-
-  .hero-tag {
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.3s forwards;
-  }
-
-  .hero-flames {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.5s forwards;
-  }
-
-  .flame-shape {
-    border-radius: 50% 50% 30% 30%;
-    animation: flicker 1.8s ease-in-out infinite;
-  }
-  .flame-shape:nth-child(1) { width: 8px; height: 18px; background: var(--dim); animation-delay: 0.1s; }
-  .flame-shape:nth-child(2) { width: 10px; height: 26px; background: var(--ember); animation-delay: 0.4s; }
-  .flame-shape:nth-child(3) { width: 14px; height: 38px; background: var(--flame); animation-delay: 0s; }
-  .flame-shape:nth-child(4) { width: 10px; height: 30px; background: var(--ember); animation-delay: 0.6s; }
-  .flame-shape:nth-child(5) { width: 12px; height: 42px; background: var(--flame); animation-delay: 0.2s; }
-  .flame-shape:nth-child(6) { width: 10px; height: 28px; background: var(--ember); animation-delay: 0.5s; }
-  .flame-shape:nth-child(7) { width: 14px; height: 36px; background: var(--flame); animation-delay: 0.3s; }
-  .flame-shape:nth-child(8) { width: 10px; height: 24px; background: var(--ember); animation-delay: 0.7s; }
-  .flame-shape:nth-child(9) { width: 8px; height: 16px; background: var(--dim); animation-delay: 0.1s; }
-
-  @keyframes flicker {
-    0%, 100% { transform: scaleY(1) scaleX(1); }
-    33% { transform: scaleY(1.08) scaleX(0.95); }
-    66% { transform: scaleY(0.94) scaleX(1.04); }
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 10vw, 96px);
-    font-weight: 300;
-    line-height: 0.95;
-    letter-spacing: -0.01em;
-    color: var(--cream);
-    margin-bottom: 8px;
-    opacity: 0;
-    animation: fadeUp 1.2s ease 0.7s forwards;
-  }
-
-  .hero-title .amp {
-    color: var(--ember);
-    font-style: italic;
-  }
-
-  .hero-subtitle {
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.9s forwards;
-  }
-
-  .hero-divider {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    width: min(380px, 90%);
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 1s ease 1s forwards;
-  }
-  .hero-divider-line { flex: 1; height: 1px; background: var(--border); }
-  .hero-divider-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ember); }
-
-  .hero-slogan {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    font-style: italic;
-    color: var(--muted);
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 1s ease 1.1s forwards;
-  }
-
-  .hero-details {
-    display: flex;
-    gap: 0;
-    opacity: 0;
-    animation: fadeUp 1s ease 1.3s forwards;
-  }
-
-  .hero-detail {
-    padding: 0 28px;
-    border-right: 1px solid var(--border);
-    text-align: center;
-  }
-  .hero-detail:last-child { border-right: none; }
-  .hd-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
-  .hd-value { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--cream); }
-
-  .hero-cta {
-    margin-top: 48px;
-    opacity: 0;
-    animation: fadeUp 1s ease 1.5s forwards;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--cream);
-    border: 1px solid var(--ember);
-    padding: 14px 36px;
-    text-decoration: none;
-    transition: background 0.3s, color 0.3s;
-    cursor: pointer;
-    background: transparent;
-  }
-  .btn-primary:hover { background: var(--ember); color: #fff; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: linear-gradient(to bottom, rgba(10,7,4,0.9), transparent);
-  }
-  .nav-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    color: var(--cream);
-    letter-spacing: 0.05em;
-  }
-  .nav-brand span { color: var(--ember); font-style: italic; }
-  .nav-links { display: flex; gap: 28px; }
-  .nav-links a {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--dim);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--cream); }
-
-  /* ── SECTION COMMON ── */
-  .section-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 100px 24px;
-  }
-
-  .section-label {
-    font-size: 9px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 6vw, 56px);
-    font-weight: 300;
-    color: var(--cream);
-    line-height: 1;
-    margin-bottom: 48px;
-  }
-
-  /* ── MENU ── */
-  #menu { border-bottom: 1px solid var(--border); }
-
-  .menu-cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-
-  .menu-col {
-    background: var(--bg2);
-    padding: 36px 32px;
-  }
-
-  .menu-col-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .menu-col-icon {
-    width: 32px; height: 32px;
-    border: 1px solid var(--ember);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    color: var(--ember);
-  }
-
-  .menu-col-title {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    color: var(--cream);
-    transition: color 0.2s;
-  }
-  .menu-item:last-child { border-bottom: none; }
-  .menu-item:hover { color: var(--flame); }
-  .menu-item-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ember); opacity: 0.4; }
-
-  .halal-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 28px;
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ember);
-    border: 1px solid var(--border);
-    padding: 8px 16px;
-  }
-
-  /* ── TIMELINE ── */
-  #timeline { border-bottom: 1px solid var(--border); }
-
-  .tl-list { display: flex; flex-direction: column; gap: 0; }
-
-  .tl-item {
-    display: grid;
-    grid-template-columns: 100px 1px 1fr;
-    gap: 0 28px;
-    align-items: start;
-    padding: 28px 0;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
-  }
-  .tl-item:last-child { border-bottom: none; }
-  .tl-item:hover { background: rgba(192,72,40,0.04); }
-
-  .tl-time {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    color: var(--muted);
-    text-align: right;
-    padding-top: 2px;
-  }
-
-  .tl-spine {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 8px;
-  }
-  .tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ember); flex-shrink: 0; }
-  .tl-dot.dim { background: var(--border); }
-  .tl-line-seg { width: 1px; flex: 1; background: var(--border); min-height: 30px; }
-
-  .tl-content { padding: 4px 0 8px; }
-  .tl-badge {
-    display: inline-block;
-    font-size: 8px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ember);
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    margin-bottom: 8px;
-  }
-  .tl-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    color: var(--cream);
-    margin-bottom: 4px;
-  }
-  .tl-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
-
-  /* ── RSVP ── */
-  #rsvp {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-  }
-
-  .rsvp-inner {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 100px 24px;
-    text-align: center;
-  }
-
-  .rsvp-quote {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(22px, 4vw, 32px);
-    font-style: italic;
-    color: var(--muted);
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-
-  .rsvp-sub {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 48px;
-  }
-
-  .rsvp-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
-
-  .rsvp-input {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--cream);
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    padding: 14px 18px;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-  .rsvp-input::placeholder { color: var(--dim); }
-  .rsvp-input:focus { border-color: var(--ember); }
-
-  .rsvp-select {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    padding: 14px 18px;
-    outline: none;
-    width: 100%;
-    cursor: pointer;
-    appearance: none;
-  }
-  .rsvp-select:focus { border-color: var(--ember); }
-
-  .btn-rsvp {
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--bg);
-    background: var(--flame);
-    border: none;
-    padding: 16px 48px;
-    cursor: pointer;
-    transition: background 0.3s;
-    width: 100%;
-  }
-  .btn-rsvp:hover { background: var(--ember); color: #fff; }
-
-  .rsvp-note { font-size: 11px; color: var(--dark); }
-
-  .whatsapp-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Jost', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 12px 24px;
-    text-decoration: none;
-    margin-top: 16px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .whatsapp-btn:hover { border-color: #25D366; color: #25D366; }
-
-  /* ── FOOTER ── */
-  footer {
-    padding: 40px 24px;
-    text-align: center;
-    border-top: 1px solid var(--border);
-  }
-  .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    color: var(--dim);
-    margin-bottom: 8px;
-  }
-  .footer-brand span { color: var(--ember); font-style: italic; }
-  .footer-note { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dark); }
-
-  /* ── RSVP SUCCESS ── */
-  .rsvp-success {
-    display: none;
-    background: var(--bg3);
-    border: 1px solid var(--ember);
-    padding: 28px;
-    text-align: center;
-    margin-top: 16px;
-  }
-  .rsvp-success.show { display: block; animation: fadeUp 0.5s ease forwards; }
-  .rsvp-success p { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--flame); font-style: italic; }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
-    .hero-details { flex-direction: column; gap: 20px; }
-    .hero-detail { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 20px; }
-    .hero-detail:last-child { border-bottom: none; }
-    .menu-cols { grid-template-columns: 1fr; }
-    .tl-item { grid-template-columns: 70px 1px 1fr; gap: 0 16px; }
-  }
+  @media (max-width:480px) { .mood-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 
+<!-- GLOW CURSOR -->
+<div id="glow-cursor"></div>
+
+<!-- STARS -->
 <canvas id="stars-canvas"></canvas>
 
-<!-- NAV -->
+<!-- FLOATING BBQ ICONS -->
+<div class="floating-icons" id="floating-icons"></div>
+
+<!-- NAV — Logo Option A (animated flame bars). Change class to logo-b or logo-c for other styles -->
 <nav>
-  <div class="nav-brand">Khan's <span>&</span> Chill</div>
+  <div class="logo-a" id="site-logo">
+    <div class="logo-a-flames">
+      <div class="logo-a-flame"></div>
+      <div class="logo-a-flame"></div>
+      <div class="logo-a-flame"></div>
+      <div class="logo-a-flame"></div>
+      <div class="logo-a-flame"></div>
+    </div>
+    <div class="logo-a-text">Khan's <span class="amp">BBQ</span></div>
+  </div>
   <div class="nav-links">
     <a href="#menu">Menu</a>
-    <a href="#timeline">Evening</a>
-    <a href="#rsvp">RSVP</a>
+    <a href="#vibes">Vibes</a>
+    <a href="#quote">Night</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <p class="hero-tag">The Khan Family invites you</p>
-
   <div class="hero-flames">
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
-    <div class="flame-shape"></div>
+    <div class="flame-shape"></div><div class="flame-shape"></div><div class="flame-shape"></div>
+    <div class="flame-shape"></div><div class="flame-shape"></div><div class="flame-shape"></div>
+    <div class="flame-shape"></div><div class="flame-shape"></div><div class="flame-shape"></div>
   </div>
-
   <h1 class="hero-title">Grill <span class="amp">&</span> Chill</h1>
-  <p class="hero-subtitle">A Khan Terrace Evening &nbsp;·&nbsp; Bangalore</p>
-
+  <p class="hero-subtitle">A Khan Terrace Evening &nbsp;·&nbsp; BTM 2nd Stage, Bangalore</p>
   <div class="hero-divider">
     <div class="hero-divider-line"></div>
     <div class="hero-divider-dot"></div>
     <div class="hero-divider-line"></div>
   </div>
-
   <p class="hero-slogan">"Skies above. Fire below. Khans in charge."</p>
-
   <div class="hero-details">
     <div class="hero-detail">
       <div class="hd-label">Date</div>
@@ -552,208 +220,175 @@
     </div>
     <div class="hero-detail">
       <div class="hd-label">Time</div>
-      <div class="hd-value">6:30 PM onwards</div>
+      <div class="hd-value">7 PM onwards</div>
     </div>
     <div class="hero-detail">
       <div class="hd-label">Venue</div>
-      <div class="hd-value">The Terrace, Bangalore</div>
+      <div class="hd-value">BTM 2nd Stage</div>
     </div>
-  </div>
-
-  <div class="hero-cta">
-    <a href="#rsvp" class="btn-primary">Confirm your seat</a>
   </div>
 </section>
 
 <!-- MENU -->
 <section id="menu">
   <div class="section-inner">
-    <div class="section-label">What's on</div>
+    <div class="section-label">What's on the grill</div>
     <h2 class="section-title">The Menu</h2>
 
-    <div class="menu-cols">
+    <!-- Row 1: Fire / Sides / Bread -->
+    <div class="menu-grid">
       <div class="menu-col">
         <div class="menu-col-head">
-          <div class="menu-col-icon">&#x1F525;</div>
+          <div class="menu-col-icon">🔥</div>
           <div class="menu-col-title">From the fire</div>
         </div>
         <div class="menu-item">Chicken <div class="menu-item-dot"></div></div>
         <div class="menu-item">Beef <div class="menu-item-dot"></div></div>
         <div class="menu-item">Mutton <div class="menu-item-dot"></div></div>
-        <div class="menu-item">Paneer tikka <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Seekh / skewers <div class="menu-item-dot"></div></div>
       </div>
       <div class="menu-col">
         <div class="menu-col-head">
-          <div class="menu-col-icon">&#x1F33D;</div>
-          <div class="menu-col-title">From the garden</div>
+          <div class="menu-col-icon">🌽</div>
+          <div class="menu-col-title">Sides</div>
         </div>
         <div class="menu-item">Corn on the cob <div class="menu-item-dot"></div></div>
         <div class="menu-item">Grilled potatoes <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Pineapple <div class="menu-item-dot"></div></div>
+      </div>
+      <div class="menu-col">
+        <div class="menu-col-head">
+          <div class="menu-col-icon">🥖</div>
+          <div class="menu-col-title">Bread station</div>
+        </div>
+        <div class="menu-item">Butter bread <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Garlic butter bread <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Grilled pav <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Toast-it-hot refills <div class="menu-item-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- Row 2: Drinks / Chutneys / Paneer tikka extra -->
+    <div class="menu-grid-row2">
+      <div class="menu-col">
+        <div class="menu-col-head">
+          <div class="menu-col-icon">🥤</div>
+          <div class="menu-col-title">Drinks</div>
+        </div>
+        <div class="menu-item">Fresh lime soda <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Thums Up <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Sprite <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Zero-sugar gang <div class="menu-item-dot"></div></div>
+      </div>
+      <div class="menu-col">
+        <div class="menu-col-head">
+          <div class="menu-col-icon">🌿</div>
+          <div class="menu-col-title">Chutneys</div>
+        </div>
+        <div class="menu-item">Mint chutney <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Mayo <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Peri peri <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Tamarind <div class="menu-item-dot"></div></div>
+      </div>
+      <div class="menu-col">
+        <div class="menu-col-head">
+          <div class="menu-col-icon">🧀</div>
+          <div class="menu-col-title">Extras</div>
+        </div>
+        <div class="menu-item">Paneer tikka <div class="menu-item-dot"></div></div>
         <div class="menu-item">Mushrooms <div class="menu-item-dot"></div></div>
-        <div class="menu-item">Garlic pav <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Chaat masala <div class="menu-item-dot"></div></div>
+        <div class="menu-item">Butter refills <div class="menu-item-dot"></div></div>
       </div>
     </div>
 
-    <div class="halal-badge">&#10003; &nbsp; All meats 100% Halal certified</div>
+    <div class="halal-badge">✓ &nbsp; All meats 100% Halal certified</div>
   </div>
 </section>
 
-<!-- TIMELINE -->
-<section id="timeline">
+<!-- VIBES MOOD BOARD -->
+<section id="vibes">
   <div class="section-inner">
-    <div class="section-label">The evening</div>
-    <h2 class="section-title">How the night unfolds</h2>
-
-    <div class="tl-list">
-      <div class="tl-item">
-        <div class="tl-time">6:30</div>
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line-seg"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Arrival</div>
-          <div class="tl-title">Doors open</div>
-          <div class="tl-desc">Welcome drinks — nimbu paani, lassi & chilled refreshments. The grill is already alive.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">7:00</div>
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line-seg"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Starters</div>
-          <div class="tl-title">Corn & paneer tikka</div>
-          <div class="tl-desc">Charred corn with butter & chaat masala. Paneer tikka hot off the skewer. Mint chutney on the side.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">7:45</div>
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line-seg"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Main event</div>
-          <div class="tl-title">Chicken & mutton</div>
-          <div class="tl-desc">Overnight-marinated chicken and mutton seekh hit the grill. The smoke rises. The aromas follow.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">8:30</div>
-        <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line-seg"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Feast</div>
-          <div class="tl-title">Full spread</div>
-          <div class="tl-desc">Everything on the table. Beef, grilled potatoes, garlic pav, chutneys, salad & cold drinks. Eat well.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">9:30</div>
-        <div class="tl-spine"><div class="tl-dot dim"></div><div class="tl-line-seg"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Dessert</div>
-          <div class="tl-title">Grilled pineapple</div>
-          <div class="tl-desc">Caramelised pineapple on the dying embers. The perfect end.</div>
-        </div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-time">Late</div>
-        <div class="tl-spine"><div class="tl-dot dim"></div></div>
-        <div class="tl-content">
-          <div class="tl-badge">Night</div>
-          <div class="tl-title">Until the embers die</div>
-          <div class="tl-desc">Good company, starlit skies, cool Bangalore breeze. Stay as long as you like.</div>
-        </div>
-      </div>
+    <div class="section-label">How the night flows</div>
+    <h2 class="vibes-intro">No Timeline.<br>Just BBQ Chaos,<br><em style="color:var(--ember)">But Classy.</em></h2>
+    <p class="vibes-sub">No "7:15 starters, 8:30 mains" business. The grill has one rule: if it is hot, it gets eaten. Hover over the cards — they move with the fire.</p>
+    <div class="mood-grid" id="mood-grid">
+      <div class="mood-card" data-tilt><span class="mood-icon">🥖</span><div class="mood-title">Bread Sizzling</div><div class="mood-desc">Butter bread and garlic butter bread hit the grill first, because waiting hungry is not a personality trait.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🍖</span><div class="mood-title">Meat On Rotation</div><div class="mood-desc">Chicken, beef, and mutton come out in smoky batches. Someone will say "just one more piece" at least six times.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🥤</span><div class="mood-title">Drinks On Ice</div><div class="mood-desc">Fresh lime soda, Thums Up, Sprite, and the zero-sugar gang standing by for serious refreshment duties.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🌿</span><div class="mood-title">Chutney Politics</div><div class="mood-desc">Mint chutney people, mayo people, peri peri people — everyone gets a side. Nobody needs to be civil about it.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🌽</span><div class="mood-title">Sides Sneak In</div><div class="mood-desc">Corn, potatoes, pineapple — making an appearance for balance. Mostly so we can pretend this was planned.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🔥</span><div class="mood-title">Grill Supervisors</div><div class="mood-desc">There will be at least two self-appointed experts near the fire. Their qualifications: confidence and a plate.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">🌙</span><div class="mood-title">Terrace Breeze</div><div class="mood-desc">Bangalore evening air, smoke drifting up, lights glowing low, and everyone slowly forgetting what time it is.</div></div>
+      <div class="mood-card" data-tilt><span class="mood-icon">✨</span><div class="mood-title">Second Rounds</div><div class="mood-desc">The official schedule says nothing. The unofficial schedule says another round when the next batch smells too good.</div></div>
     </div>
   </div>
 </section>
 
-<!-- RSVP -->
-<section id="rsvp">
-  <div class="rsvp-inner">
-    <div class="section-label" style="justify-content:center;">&#10022; &nbsp; RSVP</div>
-    <p class="rsvp-quote">"Attendance is free.<br>Missing it is not."</p>
-    <p class="rsvp-sub">Kindly confirm so we know how much to marinate</p>
-
-    <div class="rsvp-form" id="rsvp-form">
-      <input class="rsvp-input" type="text" id="rsvp-name" placeholder="Your name" />
-      <select class="rsvp-select" id="rsvp-guests">
-        <option value="" disabled selected>Number of guests coming</option>
-        <option value="1">Just me</option>
-        <option value="2">2 people</option>
-        <option value="3">3 people</option>
-        <option value="4">4 people</option>
-        <option value="5+">5 or more</option>
-      </select>
-      <button class="btn-rsvp" onclick="submitRSVP()">Confirm my seat at the grill</button>
-    </div>
-
-    <div class="rsvp-success" id="rsvp-success">
-      <p>You're on the list. See you Saturday. &#x1F525;</p>
-    </div>
-
-    <a href="https://wa.me/?text=Hey%2C%20I%27m%20coming%20to%20Khan%27s%20Grill%20%26%20Chill%20on%20Saturday%207%20June%20at%206%3A30%20PM%21%20%F0%9F%94%A5" class="whatsapp-btn" target="_blank">
-      &#128172; &nbsp; RSVP via WhatsApp instead
-    </a>
-
-    <p class="rsvp-note" style="margin-top:28px;">The grill waits for no one &nbsp;·&nbsp; Saturday 7 June &nbsp;·&nbsp; 6:30 PM</p>
+<!-- CLOSING QUOTE -->
+<section id="quote">
+  <div class="quote-inner">
+    <p class="big-quote">"Attendance is free.<br><strong>Missing it is not."</strong></p>
+    <p class="quote-meta">Saturday 7 June &nbsp;·&nbsp; 7 PM &nbsp;·&nbsp; BTM 2nd Stage, Bangalore</p>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand">Khan's Grill <span>&</span> Chill</div>
-  <p class="footer-note">Terrace BBQ Night &nbsp;·&nbsp; Bangalore &nbsp;·&nbsp; 7 June 2025</p>
+  <p class="footer-note">Terrace BBQ Night &nbsp;·&nbsp; BTM 2nd Stage, Bangalore &nbsp;·&nbsp; 7 June 2025</p>
 </footer>
 
 <script>
-  /* STARS */
-  const canvas = document.getElementById('stars-canvas');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
+/* STARS */
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function createStars() { stars = []; for (let i=0;i<180;i++) stars.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height*0.6, r:Math.random()*1.2+0.2, alpha:Math.random()*0.7+0.1, speed:Math.random()*0.008+0.002, offset:Math.random()*Math.PI*2 }); }
+function drawStars(t) { ctx.clearRect(0,0,canvas.width,canvas.height); stars.forEach(s => { const a=s.alpha*(0.6+0.4*Math.sin(t*s.speed+s.offset)); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(245,230,208,${a})`; ctx.fill(); }); requestAnimationFrame(drawStars); }
+resizeCanvas(); createStars(); requestAnimationFrame(drawStars);
+window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
+/* FLOATING ICONS */
+const bbqIcons = ['🔥','🍖','🥩','🌽','🍗','🥖','🌿','✨','🍢','🫙'];
+const floatContainer = document.getElementById('floating-icons');
+function spawnFloatIcon() {
+  const el = document.createElement('div');
+  el.className = 'float-icon';
+  el.textContent = bbqIcons[Math.floor(Math.random()*bbqIcons.length)];
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.bottom = '-60px';
+  el.style.fontSize = (18+Math.random()*20) + 'px';
+  const dur = 8+Math.random()*12;
+  el.style.animationDuration = dur + 's';
+  floatContainer.appendChild(el);
+  setTimeout(() => el.remove(), dur*1000);
+}
+setInterval(spawnFloatIcon, 1200);
+spawnFloatIcon(); spawnFloatIcon(); spawnFloatIcon();
 
-  function createStars() {
-    stars = [];
-    for (let i = 0; i < 180; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * 0.6,
-        r: Math.random() * 1.2 + 0.2,
-        alpha: Math.random() * 0.7 + 0.1,
-        speed: Math.random() * 0.008 + 0.002,
-        offset: Math.random() * Math.PI * 2
-      });
-    }
-  }
+/* GLOW CURSOR */
+const glowCursor = document.getElementById('glow-cursor');
+document.addEventListener('mousemove', e => {
+  glowCursor.style.left = e.clientX + 'px';
+  glowCursor.style.top  = e.clientY + 'px';
+});
 
-  function drawStars(t) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(s => {
-      const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed + s.offset));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(245,230,208,${a})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(drawStars);
-  }
-
-  resizeCanvas();
-  createStars();
-  requestAnimationFrame(drawStars);
-  window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
-
-  /* RSVP */
-  function submitRSVP() {
-    const name = document.getElementById('rsvp-name').value.trim();
-    const guests = document.getElementById('rsvp-guests').value;
-    if (!name || !guests) {
-      document.getElementById('rsvp-name').style.borderColor = '#C04828';
-      return;
-    }
-    document.getElementById('rsvp-form').style.display = 'none';
-    document.getElementById('rsvp-success').classList.add('show');
-  }
+/* TILT CARDS */
+document.querySelectorAll('[data-tilt]').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const dx = (e.clientX - rect.left - rect.width/2) / (rect.width/2);
+    const dy = (e.clientY - rect.top - rect.height/2) / (rect.height/2);
+    card.style.transition = 'transform 0.1s ease, border-color 0.3s, box-shadow 0.3s';
+    card.style.transform = `perspective(600px) rotateY(${dx*8}deg) rotateX(${-dy*8}deg) scale(1.03)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform 0.5s ease, border-color 0.3s, box-shadow 0.3s';
+    card.style.transform = 'perspective(600px) rotateY(0) rotateX(0) scale(1)';
+  });
+});
 </script>
 </body>
 </html>
